@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +20,11 @@ import android.widget.ImageView;
  * create an instance of this fragment.
  */
 public class GameScreen extends Fragment {
+
+    int score=0;
+    int happiness=100;
+    TextView scoreText;
+    TextView happyText;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,6 +68,7 @@ public class GameScreen extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
     }
 
     @Override
@@ -73,10 +80,31 @@ public class GameScreen extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         egbert = view.findViewById(R.id.egbert);
         egbertIdle = (AnimationDrawable) egbert.getBackground();
         egbertIdle.start();
 
+        //getting the id for the scoreText Text view
+        scoreText = getView().findViewById(R.id.scoreText);
+        happyText = getView().findViewById(R.id.happyScore);
+
+        egbert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //increasing the score by 1 each time
+                score+=1;
+                scoreText.setText(String.valueOf(score));
+
+                if(score % 5 == 0){
+                    happiness-=1;
+                    happyText.setText(String.valueOf(happiness));
+                }
+            }
+        });
+
+
+
     }
+
 }
