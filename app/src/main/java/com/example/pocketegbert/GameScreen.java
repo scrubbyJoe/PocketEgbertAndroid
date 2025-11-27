@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 /**
@@ -29,8 +29,11 @@ public class GameScreen extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    AnimationDrawable egbertIdle;
+    AnimationDrawable egbertAnim;
     ImageView egbert;
+
+    // Length of the various animations in milliseconds
+    int annoyedDuration = 500;
 
     public GameScreen() {
         // Required empty public constructor
@@ -75,13 +78,38 @@ public class GameScreen extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         egbert = view.findViewById(R.id.egbert);
-        egbertIdle = (AnimationDrawable) egbert.getBackground();
-        egbertIdle.start();
+        egbertAnim = (AnimationDrawable) egbert.getBackground();
+        egbertAnim.start();
 
+        int[] anims = new int[4];
+        anims[0] = R.drawable.johnlv1anim;
+        anims[1] = R.drawable.johnlv2anim;
+        anims[2] = R.drawable.johnlv3anim;
+        anims[3] = R.drawable.johnlv4anim;
+        final int[] i = {0};
         egbert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // update animation
+
+                // PULL FROM DATABASE TO DETERMINE WHICH ANIMATION TO PLAY
+                egbertAnim.stop();
+                egbert.setBackgroundResource(anims[i[0]]);
+                egbertAnim = (AnimationDrawable) egbert.getBackground();
+                egbertAnim.start();
+                i[0]++;
+                // Returns to idle animation
+                if(i[0] <= 3)
+                {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            egbert.setBackgroundResource(R.drawable.idleanim);
+                            egbertAnim = (AnimationDrawable) egbert.getBackground();
+                            egbertAnim.start();
+                        }
+                    }, annoyedDuration);
+                }
 
                 // update database points or whatever
             }
