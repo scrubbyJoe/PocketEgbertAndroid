@@ -1,5 +1,7 @@
 package com.example.pocketegbert;
 
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 
@@ -31,9 +33,17 @@ public class GameScreen extends Fragment {
 
     AnimationDrawable egbertAnim;
     ImageView egbert;
+    ImageView gushers;
+    ImageView ghostbusters;
+    ImageView pogohammer;
+    ImageView bunny;
 
     // Length of the various animations in milliseconds
     int annoyedDuration = 500;
+    int pogoDuration = 1950;
+    int ghostbustersDuration;
+    int happyJumpDuration = 800;
+    int bunnyDuration;
 
     public GameScreen() {
         // Required empty public constructor
@@ -77,16 +87,17 @@ public class GameScreen extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Get references to items
         egbert = view.findViewById(R.id.egbert);
-        egbertAnim = (AnimationDrawable) egbert.getBackground();
+        gushers = view.findViewById(R.id.gushers);
+        ghostbusters = view.findViewById(R.id.ghostbusters);
+        pogohammer = view.findViewById(R.id.pogohammer);
+        bunny = view.findViewById(R.id.bunny);
+
+        egbertAnim = (AnimationDrawable) egbert.getDrawable();
         egbertAnim.start();
 
-        int[] anims = new int[4];
-        anims[0] = R.drawable.johnlv1anim;
-        anims[1] = R.drawable.johnlv2anim;
-        anims[2] = R.drawable.johnlv3anim;
-        anims[3] = R.drawable.johnlv4anim;
-        final int[] i = {0};
+        // Click listener for Egbert
         egbert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,25 +105,84 @@ public class GameScreen extends Fragment {
 
                 // PULL FROM DATABASE TO DETERMINE WHICH ANIMATION TO PLAY
                 egbertAnim.stop();
-                egbert.setBackgroundResource(anims[i[0]]);
-                egbertAnim = (AnimationDrawable) egbert.getBackground();
+                egbert.setImageResource(R.drawable.johnlv1anim);
+                egbertAnim = (AnimationDrawable) egbert.getDrawable();
                 egbertAnim.start();
-                i[0]++;
                 // Returns to idle animation
-                if(i[0] <= 3)
-                {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            egbert.setBackgroundResource(R.drawable.idleanim);
-                            egbertAnim = (AnimationDrawable) egbert.getBackground();
-                            egbertAnim.start();
-                        }
-                    }, annoyedDuration);
-                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        egbert.setImageResource(R.drawable.idleanim);
+                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                        egbertAnim.start();
+                    }
+                }, annoyedDuration);
+            }
+            // update database points or whatever
+        });
 
-                // update database points or whatever
+        // Click listener for the gushers
+        gushers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                egbertAnim.stop();
+                egbert.setImageResource(R.drawable.johnhappyjumpanim);
+                egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                egbertAnim.start();
+                // Returns to idle animation
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        egbert.setImageResource(R.drawable.idleanim);
+                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                        egbertAnim.start();
+                    }
+                }, happyJumpDuration);
             }
         });
+
+        // Click listener for the ghostbusters game
+        ghostbusters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                egbertAnim.stop();
+                //egbert.setImageResource(R.drawable.ghostbustersanim);
+                egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                egbertAnim.start();
+                // Returns to idle animation
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        egbert.setImageResource(R.drawable.idleanim);
+                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                        egbertAnim.start();
+                    }
+                }, ghostbustersDuration);
+            }
+        });
+
+        // Click listener for the pogohammer
+        pogohammer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                egbertAnim.stop();
+                //egbert.setImageResource(R.drawable.bunnyanim);
+                egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                egbertAnim.start();
+                // Returns to idle animation
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        egbert.setImageResource(R.drawable.idleanim);
+                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                        egbertAnim.start();
+                    }
+                }, bunnyDuration);
+            }
+        });
+
+        // Click listener for the bunny
+
+        // TODO make custom function for playing the animations because this is ridiculous
     }
 }
