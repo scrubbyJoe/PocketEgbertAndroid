@@ -73,16 +73,10 @@ public class GameScreen extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Set up the vertical layout
-        egbert = view.findViewById(R.id.egbert);
-        egbert.setBackgroundResource(R.drawable.idleanim);
-        egbertIdle = (AnimationDrawable) egbert.getBackground();
 
-        egbert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                egbertIdle.start();
-            }
-        });
+        egbert = view.findViewById(R.id.egbert);
+        egbertIdle = (AnimationDrawable) egbert.getBackground();
+        egbertIdle.start();
+
     }
 }
