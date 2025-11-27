@@ -78,5 +78,13 @@ public class GameScreen extends Fragment {
         egbertIdle = (AnimationDrawable) egbert.getBackground();
         egbertIdle.start();
 
+        egbert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // update animation
+
+                // update database points or whatever
+            }
+        });
     }
 }
