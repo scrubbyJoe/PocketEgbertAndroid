@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.room.Room;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -71,29 +73,48 @@ public class TitleScreen extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String inputedUser = usernameInput.getText().toString();
+                String inputtedUser = usernameInput.getText().toString();
 
-                List<user> players = userDB.userDAO().getAllUsers();
+                if(inputtedUser.isEmpty()){
+                    Toast noUsernameInputed = new Toast(getActivity().getApplicationContext());
+                    noUsernameInputed.setText("No username was inputted.");
+                    noUsernameInputed.setGravity(Gravity.CENTER,0,0);
+                    noUsernameInputed.setDuration(Toast.LENGTH_LONG);
+                    noUsernameInputed.show();
+                    return;
+                }
 
-                Boolean userFound = false;
+                userGameData usersData = userDB.userGameDataDAO().getGameData(inputtedUser);
 
-                //finding player in the database
-                if(players != null){
-                    //going through all the users in the database to see if the name is there
-                    for(user player : players) {
-                        //if the name is found transfer all the data
-                        if(player.getUsername().equalsIgnoreCase(inputedUser)){
-                            Log.i("Player was found", player.getUsername());
-                            userFound = true;
-                            break;
-                        }
+
+                //if the inputted username exists retrieve the game data
+                if(usersData != null){
+                    Log.i("Player was found", usersData.user.getUsername());
+
+                    if(usersData.usersGameData != null && !usersData.usersGameData.isEmpty()){
+                        gameData game = usersData.usersGameData.get(0);
+                        Log.i("GameData", "Score: " + game.score);
+                        Log.i("GameData", "Happiness: " + game.happiness);
+                    }
+                    else{
+                        Log.i("GameData", "nothing found");
+
                     }
                 }
                 //user was not found so new user is added to the database
-                if(!userFound){
+                else{
                     Log.i("Play Data", "User was not found making new user");
-                    user newUser = new user(inputedUser);
+                    //making new user and gameData objects to store the new data
+
+                    //making a new user
+                    user newUser = new user(inputtedUser);
                     userDB.userDAO().addUser(newUser);
+
+                    user insertedUser= userDB.userDAO().getUsername(inputtedUser);
+
+                    gameData newGame = new gameData(0,100,insertedUser.id);
+                    //adding the new user and data to the database
+                    userDB.gameDataDAO().addGameData(newGame);
                     Log.i("New User", "User was added");
                 }
             }

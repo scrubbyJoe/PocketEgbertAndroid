@@ -17,8 +17,12 @@ public interface userDAO {
     void updateUser(user u);
     @Delete
     void deleteUser(user u);
+
     @Query("SELECT * FROM user Where id = :id")
-    user getUser(int id);
+    user getUserId(int id);
+
+    @Query("SELECT * FROM user Where username = :username")
+    user getUsername(String username);
 
     @Query("SELECT * FROM user")
     List<user> getAllUsers();
