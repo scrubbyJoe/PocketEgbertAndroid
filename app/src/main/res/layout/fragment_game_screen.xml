@@ -11,13 +11,55 @@
         android:id="@+id/egbert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/idleanim"
         android:scaleX="1"
         android:scaleY="1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.589"
+        app:layout_constraintHorizontal_bias="0.564"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.498" />
+        app:layout_constraintVertical_bias="0.62"
+        app:srcCompat="@drawable/idleanim" />
+
+    <ImageView
+        android:id="@+id/gushers"
+        android:layout_width="80dp"
+        android:layout_height="72dp"
+        android:layout_marginEnd="8dp"
+        android:longClickable="true"
+        android:src="@drawable/gushers"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.41000003" />
+
+    <ImageView
+        android:id="@+id/pogohammer"
+        android:layout_width="71dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/pogohammer"
+        app:layout_constraintEnd_toEndOf="@+id/gushers"
+        app:layout_constraintStart_toStartOf="@+id/gushers"
+        app:layout_constraintTop_toBottomOf="@+id/gushers" />
+
+    <ImageView
+        android:id="@+id/bunny"
+        android:layout_width="65dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/bunny"
+        app:layout_constraintEnd_toEndOf="@+id/pogohammer"
+        app:layout_constraintStart_toStartOf="@+id/pogohammer"
+        app:layout_constraintTop_toBottomOf="@+id/pogohammer" />
+
+    <ImageView
+        android:id="@+id/gushersSprites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/gushersblank"
+        app:layout_constraintBottom_toTopOf="@+id/egbert"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
