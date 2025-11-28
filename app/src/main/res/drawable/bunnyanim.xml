@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+    <item android:drawable="@drawable/bunny1" android:duration="50" />
+    <item android:drawable="@drawable/bunny2" android:duration="50" />
+    <item android:drawable="@drawable/bunny3" android:duration="50" />
+    <item android:drawable="@drawable/bunny1" android:duration="50" />
+    <item android:drawable="@drawable/bunny2" android:duration="50" />
+    <item android:drawable="@drawable/bunny3" android:duration="50" />
+    <item android:drawable="@drawable/bunny1" android:duration="50" />
+    <item android:drawable="@drawable/bunny2" android:duration="50" />
+    <item android:drawable="@drawable/bunny3" android:duration="50" />
+    <item android:drawable="@drawable/bunny1" android:duration="50" />
+    <item android:drawable="@drawable/bunny2" android:duration="50" />
+    <item android:drawable="@drawable/bunny3" android:duration="50" />
+    <item android:drawable="@drawable/bunny1" android:duration="50" />
+    <item android:drawable="@drawable/bunny2" android:duration="50" />
+    <item android:drawable="@drawable/bunny3" android:duration="50" />
+    <item android:drawable="@drawable/bunny4" android:duration="50" />
+    <item android:drawable="@drawable/bunny5" android:duration="100" />
+    <item android:drawable="@drawable/bunny6" android:duration="500" />
+</animation-list>

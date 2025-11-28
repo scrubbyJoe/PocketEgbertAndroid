@@ -31,17 +31,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.33" />
-
-    <ImageView
-        android:id="@+id/ghostbusters"
-        android:layout_width="69dp"
-        android:layout_height="93dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ghostbusters"
-        app:layout_constraintEnd_toEndOf="@+id/gushers"
-        app:layout_constraintStart_toStartOf="@+id/gushers"
-        app:layout_constraintTop_toBottomOf="@+id/gushers" />
+        app:layout_constraintVertical_bias="0.41000003" />
 
     <ImageView
         android:id="@+id/pogohammer"
@@ -49,9 +39,9 @@
         android:layout_height="59dp"
         android:layout_marginTop="20dp"
         android:src="@drawable/pogohammer"
-        app:layout_constraintEnd_toEndOf="@+id/ghostbusters"
-        app:layout_constraintStart_toStartOf="@+id/ghostbusters"
-        app:layout_constraintTop_toBottomOf="@+id/ghostbusters" />
+        app:layout_constraintEnd_toEndOf="@+id/gushers"
+        app:layout_constraintStart_toStartOf="@+id/gushers"
+        app:layout_constraintTop_toBottomOf="@+id/gushers" />
 
     <ImageView
         android:id="@+id/bunny"
@@ -62,4 +52,14 @@
         app:layout_constraintEnd_toEndOf="@+id/pogohammer"
         app:layout_constraintStart_toStartOf="@+id/pogohammer"
         app:layout_constraintTop_toBottomOf="@+id/pogohammer" />
+
+    <ImageView
+        android:id="@+id/gushersSprites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:src="@drawable/gushersblank"
+        app:layout_constraintBottom_toTopOf="@+id/egbert"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
