@@ -9,12 +9,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -67,6 +69,7 @@ public class GameScreen extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_game_screen, container, false);
+
     }
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -80,18 +83,29 @@ public class GameScreen extends Fragment {
 
        userGameData usersData = viewModel.getPlayersGameData();
 
+        //getting the id for the scoreText Text view
+        scoreText = getView().findViewById(R.id.scoreText);
+        happyText = getView().findViewById(R.id.happyScore);
+
        if(usersData != null){
            user currentUser = usersData.user;
            gameData game = usersData.usersGameData.get(0);
+           scoreText.setText(String.valueOf(game.score));
+           happyText.setText(String.valueOf(game.happiness));
+       }
+       else{
+           Toast loginPlease = new Toast(getActivity().getApplicationContext());
+           loginPlease.setText("Please go and enter a username.");
+           loginPlease.setGravity(Gravity.CENTER,0,0);
+           loginPlease.setDuration(Toast.LENGTH_LONG);
+           loginPlease.show();
+           return;
        }
 
         egbert = view.findViewById(R.id.egbert);
         egbertIdle = (AnimationDrawable) egbert.getBackground();
         egbertIdle.start();
 
-        //getting the id for the scoreText Text view
-        scoreText = getView().findViewById(R.id.scoreText);
-        happyText = getView().findViewById(R.id.happyScore);
 
         egbert.setOnClickListener(new View.OnClickListener() {
             @Override
