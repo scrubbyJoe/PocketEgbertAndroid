@@ -3,6 +3,7 @@ package com.example.pocketegbert;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import android.util.Log;
@@ -73,6 +74,7 @@ public class TitleScreen extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
                 String inputtedUser = usernameInput.getText().toString();
 
                 if(inputtedUser.isEmpty()){
@@ -95,6 +97,7 @@ public class TitleScreen extends Fragment {
                         gameData game = usersData.usersGameData.get(0);
                         Log.i("GameData", "Score: " + game.score);
                         Log.i("GameData", "Happiness: " + game.happiness);
+                        viewModel.setPlayersGameData(usersData);
                     }
                     else{
                         Log.i("GameData", "nothing found");
@@ -115,6 +118,11 @@ public class TitleScreen extends Fragment {
                     gameData newGame = new gameData(0,100,insertedUser.id);
                     //adding the new user and data to the database
                     userDB.gameDataDAO().addGameData(newGame);
+
+                    usersData= userDB.userGameDataDAO().getGameData(inputtedUser);
+
+                    viewModel.setPlayersGameData(usersData);
+
                     Log.i("New User", "User was added");
                 }
             }

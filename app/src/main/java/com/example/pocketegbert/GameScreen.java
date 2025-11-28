@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Room;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +23,6 @@ import android.widget.TextView;
  */
 public class GameScreen extends Fragment {
 
-    int score=0;
-    int happiness=100;
     TextView scoreText;
     TextView happyText;
 
@@ -42,15 +42,6 @@ public class GameScreen extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment GameScreen.
-     */
-    // TODO: Rename and change types and number of parameters
     public static GameScreen newInstance(String param1, String param2) {
         GameScreen fragment = new GameScreen();
         Bundle args = new Bundle();
@@ -80,6 +71,20 @@ public class GameScreen extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //Setting up database
+        userDatabase userDB = Room.databaseBuilder(requireContext().getApplicationContext(), userDatabase.class, "userDatabase")
+                .allowMainThreadQueries().fallbackToDestructiveMigration(true).build();
+
+       SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+       userGameData usersData = viewModel.getPlayersGameData();
+
+       if(usersData != null){
+           user currentUser = usersData.user;
+           gameData game = usersData.usersGameData.get(0);
+       }
+
         egbert = view.findViewById(R.id.egbert);
         egbertIdle = (AnimationDrawable) egbert.getBackground();
         egbertIdle.start();
@@ -91,14 +96,18 @@ public class GameScreen extends Fragment {
         egbert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                gameData game = usersData.usersGameData.get(0);
 
                 //increasing the score by 1 each time
-                score+=1;
-                scoreText.setText(String.valueOf(score));
+                game.score +=1;
+                scoreText.setText(String.valueOf(game.score));
+                userDB.gameDataDAO().updateGameData(game);
 
-                if(score % 5 == 0){
-                    happiness-=1;
-                    happyText.setText(String.valueOf(happiness));
+
+                if(game.score % 5 == 0){
+                    game.happiness-=1;
+                    happyText.setText(String.valueOf(game.happiness));
+                    userDB.gameDataDAO().updateGameData(game);
                 }
             }
         });
