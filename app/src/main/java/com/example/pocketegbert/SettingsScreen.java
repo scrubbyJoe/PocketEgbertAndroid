@@ -91,9 +91,9 @@ public class SettingsScreen extends Fragment {
         bgSpinner = view.findViewById(R.id.bgSpinner);
         diffSpinner = view.findViewById(R.id.difficultySpinner);
 
-        bgSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        bgSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 gameData game = usersData.usersGameData.get(0);
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if(selectedItem.equals("The White Void"))
@@ -103,11 +103,16 @@ public class SettingsScreen extends Fragment {
                 else
                     game.background = 3;
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
 
-        diffSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        diffSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 gameData game = usersData.usersGameData.get(0);
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if(selectedItem.equals("Easy"))
@@ -118,6 +123,11 @@ public class SettingsScreen extends Fragment {
                     game.difficulty = 3;
                 else
                     game.difficulty = 4;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

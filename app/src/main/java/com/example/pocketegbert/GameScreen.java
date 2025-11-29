@@ -50,7 +50,7 @@ public class GameScreen extends Fragment {
     ImageView gushers;
     ImageView pogohammer;
     ImageView bunny;
-    ImageView background;
+    ImageView backgroundView;
 
     // Length of the various animations in milliseconds
     int annoyedDuration = 500;
@@ -109,7 +109,7 @@ public class GameScreen extends Fragment {
         // Get ids for views to immediately be set up
         scoreText = getView().findViewById(R.id.scoreText);
         happyText = getView().findViewById(R.id.happyScore);
-        background = view.findViewById(R.id.background);
+        backgroundView = view.findViewById(R.id.background);
 
         // If user has logged in
         if(usersData != null){
@@ -143,11 +143,11 @@ public class GameScreen extends Fragment {
 
            // Setting the background
            if(game.background == 1)
-               background.setImageResource(R.drawable.white);
+               backgroundView.setImageResource(R.drawable.white);
            else if(game.background == 2)
-               background.setImageResource(R.drawable.skaia);
+               backgroundView.setImageResource(R.drawable.skaia);
            else
-               background.setImageResource(R.drawable.hell);
+               backgroundView.setImageResource(R.drawable.hell);
        }
         // Otherwise, yell at them
        else{
@@ -243,6 +243,9 @@ public class GameScreen extends Fragment {
                 if(game.happiness > 0)
                 {
                     game.happiness += 1;
+                    happyText.setText(String.valueOf(game.happiness));
+                    userDB.gameDataDAO().updateGameData(game);
+
                     egbertAnim.stop();
                     egbert.setImageResource(R.drawable.johnhappyjumpanim);
                     gushersSprites.setImageResource(R.drawable.gushersanim);
@@ -275,6 +278,9 @@ public class GameScreen extends Fragment {
                 if(game.happiness > 0)
                 {
                     game.happiness += 5;
+                    happyText.setText(String.valueOf(game.happiness));
+                    userDB.gameDataDAO().updateGameData(game);
+
                     egbertAnim.stop();
                     egbert.setImageResource(R.drawable.pogohammeranim);
                     egbertAnim = (AnimationDrawable) egbert.getDrawable();
@@ -301,6 +307,9 @@ public class GameScreen extends Fragment {
                 if(game.happiness > 0)
                 {
                     game.happiness += 10;
+                    happyText.setText(String.valueOf(game.happiness));
+                    userDB.gameDataDAO().updateGameData(game);
+
                     egbertAnim.stop();
                     egbert.setImageResource(R.drawable.bunnyanim);
                     egbertAnim = (AnimationDrawable) egbert.getDrawable();
