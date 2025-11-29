@@ -8,12 +8,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Room;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +25,12 @@ import android.widget.ImageView;
  * create an instance of this fragment.
  */
 public class GameScreen extends Fragment {
+
+    // ------------TOPHER CODE---------------
+
+    TextView scoreText;
+    TextView happyText;
+    // ------------TOPHER CODE---------------
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,15 +59,6 @@ public class GameScreen extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment GameScreen.
-     */
-    // TODO: Rename and change types and number of parameters
     public static GameScreen newInstance(String param1, String param2) {
         GameScreen fragment = new GameScreen();
         Bundle args = new Bundle();
@@ -75,6 +76,7 @@ public class GameScreen extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
     }
 
     @Override
@@ -82,12 +84,44 @@ public class GameScreen extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_game_screen, container, false);
+
     }
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // Get references to items
+        //Setting up database
+
+        // ------------TOPHER CODE---------------
+        
+        userDatabase userDB = Room.databaseBuilder(requireContext().getApplicationContext(), userDatabase.class, "userDatabase")
+                .allowMainThreadQueries().fallbackToDestructiveMigration(true).build();
+
+       SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+       userGameData usersData = viewModel.getPlayersGameData();
+
+        //getting the id for the scoreText Text view
+        scoreText = getView().findViewById(R.id.scoreText);
+        happyText = getView().findViewById(R.id.happyScore);
+
+       if(usersData != null){
+           user currentUser = usersData.user;
+           gameData game = usersData.usersGameData.get(0);
+           scoreText.setText(String.valueOf(game.score));
+           happyText.setText(String.valueOf(game.happiness));
+       }
+       else{
+           Toast loginPlease = new Toast(getActivity().getApplicationContext());
+           loginPlease.setText("Please go and enter a username.");
+           loginPlease.setGravity(Gravity.CENTER,0,0);
+           loginPlease.setDuration(Toast.LENGTH_LONG);
+           loginPlease.show();
+           return;
+       }
+        // ------------TOPHER CODE---------------
+
         egbert = view.findViewById(R.id.egbert);
         gushers = view.findViewById(R.id.gushers);
         gushersSprites = view.findViewById(R.id.gushersSprites);
@@ -104,6 +138,23 @@ public class GameScreen extends Fragment {
                 // update animation
 
                 // PULL FROM DATABASE TO DETERMINE WHICH ANIMATION TO PLAY
+
+                // ------------TOPHER CODE---------------
+                gameData game = usersData.usersGameData.get(0);
+
+                //increasing the score by 1 each time
+                game.score +=1;
+                scoreText.setText(String.valueOf(game.score));
+                userDB.gameDataDAO().updateGameData(game);
+
+
+                if(game.score % 5 == 0){
+                    game.happiness-=1;
+                    happyText.setText(String.valueOf(game.happiness));
+                    userDB.gameDataDAO().updateGameData(game);
+                }
+                // ------------TOPHER CODE---------------
+
                 egbertAnim.stop();
                 egbert.setImageResource(R.drawable.johnlv1anim);
                 egbertAnim = (AnimationDrawable) egbert.getDrawable();
@@ -186,5 +237,16 @@ public class GameScreen extends Fragment {
                 }, bunnyDuration);
             }
         });
+
+        egbert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
+
     }
+
 }
