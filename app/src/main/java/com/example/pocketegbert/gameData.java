@@ -11,7 +11,6 @@ public class gameData {
     int score;
     int happiness;
 
-
     public gameData(int score, int happiness, int userId){
         this.score=score;
         this.happiness=happiness;

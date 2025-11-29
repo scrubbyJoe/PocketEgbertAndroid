@@ -102,16 +102,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.051" />
 
-    <Spinner
-        android:id="@+id/chooseYourBertSpinner"
-        android:layout_width="143dp"
-        android:layout_height="39dp"
-        android:entries="@array/egberts"
-        android:popupBackground="@drawable/johnidle1"
-        app:layout_constraintBottom_toTopOf="@+id/gushersSprites"
-        app:layout_constraintEnd_toStartOf="@+id/happyScore"
-        app:layout_constraintHorizontal_bias="0.641"
-        app:layout_constraintStart_toEndOf="@+id/scoreText"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.333" />
 </androidx.constraintlayout.widget.ConstraintLayout>

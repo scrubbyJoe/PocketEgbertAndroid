@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -70,12 +71,15 @@ public class TitleScreen extends Fragment {
 
         TextInputEditText usernameInput = v.findViewById(R.id.usernameInput);
         Button loginButton = v.findViewById(R.id.loginButton);
+        Spinner saveSlotSelector = v.findViewById(R.id.saveSlotSpinner);
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
                 String inputtedUser = usernameInput.getText().toString();
+                int saveSlot = saveSlotSelector.getSelectedItemPosition();
 
                 if(inputtedUser.isEmpty()){
                     Toast noUsernameInputed = new Toast(getActivity().getApplicationContext());
@@ -91,19 +95,20 @@ public class TitleScreen extends Fragment {
 
                 //if the inputted username exists retrieve the game data
                 if(usersData != null){
-                    Log.i("Player was found", usersData.user.getUsername());
-
-                    if(usersData.usersGameData != null && !usersData.usersGameData.isEmpty()){
-                        gameData game = usersData.usersGameData.get(0);
+                    if (usersData.usersGameData != null && !usersData.usersGameData.isEmpty()) {
+                        gameData game = usersData.usersGameData.get(saveSlot);
+                        Log.i("GameData", "Save Slot: " + saveSlot);
+                        Log.i("GameData", "Score: " + usersData.user.getUsername());
                         Log.i("GameData", "Score: " + game.score);
                         Log.i("GameData", "Happiness: " + game.happiness);
                         viewModel.setPlayersGameData(usersData);
-                    }
-                    else{
-                        Log.i("GameData", "nothing found");
-
+                        viewModel.setSaveSlot(saveSlot);
+                        }
+                    else {
+                        Log.i("ERROR", "nothing found");
                     }
                 }
+
                 //user was not found so new user is added to the database
                 else{
                     Log.i("Play Data", "User was not found making new user");
@@ -115,9 +120,11 @@ public class TitleScreen extends Fragment {
 
                     user insertedUser= userDB.userDAO().getUsername(inputtedUser);
 
-                    gameData newGame = new gameData(0,100,insertedUser.id);
+                    gameData newGameSlot1 = new gameData(0,100,insertedUser.id);
+                    gameData newGameSlot2 = new gameData(5,90,insertedUser.id);
                     //adding the new user and data to the database
-                    userDB.gameDataDAO().addGameData(newGame);
+                    userDB.gameDataDAO().addGameData(newGameSlot1);
+                    userDB.gameDataDAO().addGameData(newGameSlot2);
 
                     usersData= userDB.userGameDataDAO().getGameData(inputtedUser);
 
