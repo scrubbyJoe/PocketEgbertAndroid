@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,9 +157,27 @@ public class GameScreen extends Fragment {
                 // ------------TOPHER CODE---------------
 
                 egbertAnim.stop();
-                egbert.setImageResource(R.drawable.johnlv1anim);
-                egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                egbertAnim.start();
+
+                // figure it out
+                if(game.happiness < 75 && game.happiness > 50)
+                {
+                    egbert.setImageResource(R.drawable.johnlv1anim);
+                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                    egbertAnim.start();
+                }
+                else if(game.happiness < 50 && game.happiness > 25)
+                {
+                    egbert.setImageResource(R.drawable.johnlv2anim);
+                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                    egbertAnim.start();
+                }
+                else if(game.happiness < 25 && game.happiness > 0)
+                {
+                    egbert.setImageResource(R.drawable.johnlv3anim);
+                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                    egbertAnim.start();
+                }
+
                 // Returns to idle animation
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -237,16 +256,6 @@ public class GameScreen extends Fragment {
                 }, bunnyDuration);
             }
         });
-
-        egbert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-
-
     }
 
 }
