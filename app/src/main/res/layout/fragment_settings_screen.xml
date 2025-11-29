@@ -23,6 +23,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:entries="@array/background_entries"
         app:layout_constraintEnd_toEndOf="@+id/bgText"
         app:layout_constraintStart_toStartOf="@+id/bgText"
         app:layout_constraintTop_toBottomOf="@+id/bgText" />
@@ -32,6 +33,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:entries="@array/difficulty_entries"
         app:layout_constraintEnd_toEndOf="@+id/difficultyText"
         app:layout_constraintStart_toStartOf="@+id/difficultyText"
         app:layout_constraintTop_toBottomOf="@+id/difficultyText" />
