@@ -149,44 +149,55 @@ public class GameScreen extends Fragment {
                 userDB.gameDataDAO().updateGameData(game);
 
 
-                if(game.score % 5 == 0){
-                    game.happiness-=1;
+                if(game.score % 1 == 0){
+                    game.happiness-=100;
                     happyText.setText(String.valueOf(game.happiness));
                     userDB.gameDataDAO().updateGameData(game);
                 }
                 // ------------TOPHER CODE---------------
 
-                egbertAnim.stop();
+                if(game.happiness > 0)
+                {
+                    egbertAnim.stop();
 
-                // figure it out
-                if(game.happiness < 75 && game.happiness > 50)
-                {
-                    egbert.setImageResource(R.drawable.johnlv1anim);
-                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                    egbertAnim.start();
-                }
-                else if(game.happiness < 50 && game.happiness > 25)
-                {
-                    egbert.setImageResource(R.drawable.johnlv2anim);
-                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                    egbertAnim.start();
-                }
-                else if(game.happiness < 25 && game.happiness > 0)
-                {
-                    egbert.setImageResource(R.drawable.johnlv3anim);
-                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                    egbertAnim.start();
-                }
-
-                // Returns to idle animation
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        egbert.setImageResource(R.drawable.idleanim);
+                    // figure it out
+                    if(game.happiness < 75 && game.happiness > 50)
+                    {
+                        egbert.setImageResource(R.drawable.johnlv1anim);
                         egbertAnim = (AnimationDrawable) egbert.getDrawable();
                         egbertAnim.start();
                     }
-                }, annoyedDuration);
+                    else if(game.happiness < 50 && game.happiness > 25)
+                    {
+                        egbert.setImageResource(R.drawable.johnlv2anim);
+                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                        egbertAnim.start();
+                    }
+                    else if(game.happiness < 25 && game.happiness > 0)
+                    {
+                        egbert.setImageResource(R.drawable.johnlv3anim);
+                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                        egbertAnim.start();
+                    }
+
+                    // Returns to idle animation
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            egbert.setImageResource(R.drawable.idleanim);
+                            egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                            egbertAnim.start();
+                        }
+                    }, annoyedDuration);
+                }
+                else
+                {
+                    egbert.setImageResource(R.drawable.john40);
+                    gushersSprites.setImageResource(R.drawable.brainbleedanim);
+                    gushersAnim = (AnimationDrawable) gushersSprites.getDrawable();
+                    gushersAnim.start();
+                }
+
             }
             // update database points or whatever
         });
@@ -196,24 +207,30 @@ public class GameScreen extends Fragment {
         gushers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                egbertAnim.stop();
-                egbert.setImageResource(R.drawable.johnhappyjumpanim);
-                gushersSprites.setImageResource(R.drawable.gushersanim);
-                egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                gushersAnim = (AnimationDrawable) gushersSprites.getDrawable();
-                egbertAnim.start();
-                gushersAnim.start();
-                // Returns to idle animation
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        egbert.setImageResource(R.drawable.idleanim);
-                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                        egbertAnim.start();
-                        gushersAnim.stop();
-                        gushersSprites.setImageResource(R.drawable.gushersblank);
-                    }
-                }, happyJumpDuration);
+                gameData game = usersData.usersGameData.get(0);
+
+                if(game.happiness > 0)
+                {
+                    egbertAnim.stop();
+                    egbert.setImageResource(R.drawable.johnhappyjumpanim);
+                    gushersSprites.setImageResource(R.drawable.gushersanim);
+                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                    gushersAnim = (AnimationDrawable) gushersSprites.getDrawable();
+                    egbertAnim.start();
+                    gushersAnim.start();
+                    // Returns to idle animation
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            egbert.setImageResource(R.drawable.idleanim);
+                            egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                            egbertAnim.start();
+                            gushersAnim.stop();
+                            gushersSprites.setImageResource(R.drawable.gushersblank);
+                        }
+                    }, happyJumpDuration);
+                }
+
             }
         });
 
@@ -221,19 +238,24 @@ public class GameScreen extends Fragment {
         pogohammer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                egbertAnim.stop();
-                egbert.setImageResource(R.drawable.pogohammeranim);
-                egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                egbertAnim.start();
-                // Returns to idle animation
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        egbert.setImageResource(R.drawable.idleanim);
-                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                        egbertAnim.start();
-                    }
-                }, pogoDuration);
+                gameData game = usersData.usersGameData.get(0);
+
+                if(game.happiness > 0)
+                {
+                    egbertAnim.stop();
+                    egbert.setImageResource(R.drawable.pogohammeranim);
+                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                    egbertAnim.start();
+                    // Returns to idle animation
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            egbert.setImageResource(R.drawable.idleanim);
+                            egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                            egbertAnim.start();
+                        }
+                    }, pogoDuration);
+                }
             }
         });
 
@@ -241,19 +263,24 @@ public class GameScreen extends Fragment {
         bunny.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                egbertAnim.stop();
-                egbert.setImageResource(R.drawable.bunnyanim);
-                egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                egbertAnim.start();
-                // Returns to idle animation
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        egbert.setImageResource(R.drawable.idleanim);
-                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                        egbertAnim.start();
-                    }
-                }, bunnyDuration);
+                gameData game = usersData.usersGameData.get(0);
+
+                if(game.happiness > 0)
+                {
+                    egbertAnim.stop();
+                    egbert.setImageResource(R.drawable.bunnyanim);
+                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                    egbertAnim.start();
+                    // Returns to idle animation
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            egbert.setImageResource(R.drawable.idleanim);
+                            egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                            egbertAnim.start();
+                        }
+                    }, bunnyDuration);
+                }
             }
         });
     }

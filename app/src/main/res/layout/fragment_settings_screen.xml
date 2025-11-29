@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsScreen">
+    tools:context=".SettingsScreen" >
 
-    <!-- TODO: Update blank fragment layout -->
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/typostuck"
+        android:text="Delete Data"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="@+id/bgText"
+        app:layout_constraintStart_toStartOf="@+id/bgText"
+        app:layout_constraintTop_toBottomOf="@+id/difficultySpinner" />
+
+    <Spinner
+        android:id="@+id/bgSpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/bgText"
+        app:layout_constraintStart_toStartOf="@+id/bgText"
+        app:layout_constraintTop_toBottomOf="@+id/bgText" />
+
+    <Spinner
+        android:id="@+id/difficultySpinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/difficultyText"
+        app:layout_constraintStart_toStartOf="@+id/difficultyText"
+        app:layout_constraintTop_toBottomOf="@+id/difficultyText" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="settings fragment" />
+        android:id="@+id/bgText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/typostuck"
+        android:text="Background"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.29000002" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/difficultyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/typostuck"
+        android:text="Difficulty"
+        android:textSize="34sp"
+        app:layout_constraintEnd_toEndOf="@+id/bgText"
+        app:layout_constraintStart_toStartOf="@+id/bgText"
+        app:layout_constraintTop_toBottomOf="@+id/bgSpinner" />
+</androidx.constraintlayout.widget.ConstraintLayout>
