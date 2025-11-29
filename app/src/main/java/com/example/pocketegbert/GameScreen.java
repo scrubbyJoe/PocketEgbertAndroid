@@ -284,5 +284,4 @@ public class GameScreen extends Fragment {
             }
         });
     }
-
 }
