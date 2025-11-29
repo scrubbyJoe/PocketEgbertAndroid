@@ -186,6 +186,5 @@ public class GameScreen extends Fragment {
                 }, bunnyDuration);
             }
         });
-        // TODO make custom function for playing the animations because this is ridiculous
     }
 }
