@@ -8,11 +8,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +36,8 @@ public class SettingsScreen extends Fragment {
     // Spinners
     Spinner bgSpinner;
     Spinner diffSpinner;
+
+    Button deleteData;
 
     public SettingsScreen() {
         // Required empty public constructor
@@ -82,19 +87,29 @@ public class SettingsScreen extends Fragment {
 
         userGameData usersData = viewModel.getPlayersGameData();
 
+        int currentSave = viewModel.getSaveSlot();
+
         if(usersData != null){
             user currentUser = usersData.user;
-            gameData game = usersData.usersGameData.get(0);
-
+            gameData game = usersData.usersGameData.get(currentSave);
+        }
+        else{
+            Toast loginPlease = new Toast(getActivity().getApplicationContext());
+            loginPlease.setText("Please go and enter a username.");
+            loginPlease.setGravity(Gravity.CENTER,0,0);
+            loginPlease.setDuration(Toast.LENGTH_LONG);
+            loginPlease.show();
+            return;
         }
 
         bgSpinner = view.findViewById(R.id.bgSpinner);
         diffSpinner = view.findViewById(R.id.difficultySpinner);
+        deleteData = view.findViewById(R.id.deleteButton);
 
         bgSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                gameData game = usersData.usersGameData.get(0);
+                gameData game = usersData.usersGameData.get(currentSave);
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if(selectedItem.equals("The White Void"))
                     game.background = 1;
@@ -113,7 +128,7 @@ public class SettingsScreen extends Fragment {
         diffSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                gameData game = usersData.usersGameData.get(0);
+                gameData game = usersData.usersGameData.get(currentSave);
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 if(selectedItem.equals("Easy"))
                     game.difficulty = 1;
@@ -128,6 +143,23 @@ public class SettingsScreen extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        deleteData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                user currentUser = usersData.user;
+                gameData gameSlot1 = usersData.usersGameData.get(0);
+                gameData gameSlot2 = usersData.usersGameData.get(1);
+                userDB.gameDataDAO().deleteGameData(gameSlot1);
+                userDB.gameDataDAO().deleteGameData(gameSlot2);
+                userDB.userDAO().deleteUser(currentUser);
+                Toast loginAgainPlease = new Toast(getActivity().getApplicationContext());
+                loginAgainPlease.setText("Deleted All Data. Login again to start a new!");
+                loginAgainPlease.setGravity(Gravity.CENTER,0,0);
+                loginAgainPlease.setDuration(Toast.LENGTH_LONG);
+                loginAgainPlease.show();
             }
         });
     }

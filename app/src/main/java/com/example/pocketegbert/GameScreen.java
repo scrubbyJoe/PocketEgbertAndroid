@@ -188,7 +188,7 @@ public class GameScreen extends Fragment {
             @Override
             public void onClick(View v) {
                 // Get database reference
-                gameData game = usersData.usersGameData.get(0);
+                gameData game = usersData.usersGameData.get(currentSave);
 
                 // Update the game score
                 game.score +=1;
@@ -252,7 +252,7 @@ public class GameScreen extends Fragment {
         gushers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameData game = usersData.usersGameData.get(0);
+                gameData game = usersData.usersGameData.get(currentSave);
 
                 if(game.happiness > 0)
                 {
@@ -287,7 +287,7 @@ public class GameScreen extends Fragment {
         pogohammer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameData game = usersData.usersGameData.get(0);
+                gameData game = usersData.usersGameData.get(currentSave);
 
                 if(game.happiness > 0)
                 {
@@ -316,7 +316,7 @@ public class GameScreen extends Fragment {
         bunny.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                gameData game = usersData.usersGameData.get(0);
+                gameData game = usersData.usersGameData.get(currentSave);
 
                 if(game.happiness > 0)
                 {
