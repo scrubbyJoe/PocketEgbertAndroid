@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -105,6 +106,7 @@ public class GameScreen extends Fragment {
        SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
        userGameData usersData = viewModel.getPlayersGameData();
+       int currentSave = viewModel.getSaveSlot();
 
         // Get ids for views to immediately be set up
         scoreText = getView().findViewById(R.id.scoreText);
@@ -123,7 +125,7 @@ public class GameScreen extends Fragment {
         if(usersData != null){
             // Set up everything based on previous data or defaults
             user currentUser = usersData.user;
-            gameData game = usersData.usersGameData.get(0);
+            gameData game = usersData.usersGameData.get(currentSave);
             scoreText.setText(String.valueOf(game.score));
             happyText.setText(String.valueOf(game.happiness));
 
