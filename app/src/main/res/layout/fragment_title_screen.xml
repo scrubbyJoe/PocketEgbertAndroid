@@ -51,7 +51,6 @@
             android:layout_width="322dp"
             android:layout_height="50dp"
             android:entries="@array/egberts"
-            android:popupBackground="@drawable/ghostbusters"
             app:layout_constraintBottom_toTopOf="@+id/loginButton"
             app:layout_constraintEnd_toEndOf="@+id/usernameInput"
             app:layout_constraintStart_toStartOf="@+id/usernameInput"
