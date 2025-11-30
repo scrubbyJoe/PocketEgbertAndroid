@@ -42,6 +42,7 @@ public class GameScreen extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    // Views
     AnimationDrawable egbertAnim;
     AnimationDrawable gushersAnim;
     ImageView egbert;
@@ -49,12 +50,18 @@ public class GameScreen extends Fragment {
     ImageView gushers;
     ImageView pogohammer;
     ImageView bunny;
+    ImageView backgroundView;
 
     // Length of the various animations in milliseconds
     int annoyedDuration = 500;
     int pogoDuration = 1950;
     int happyJumpDuration = 800;
     int bunnyDuration = 1400;
+
+    // Difficulty and background to be pulled from database
+    int difficultyMod;
+    int happinessRate;
+    int background;
 
     public GameScreen() {
         // Required empty public constructor
@@ -91,11 +98,7 @@ public class GameScreen extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get references to items
-        //Setting up database
-
-        // ------------TOPHER CODE---------------
-        
+        // Setting up the database
         userDatabase userDB = Room.databaseBuilder(requireContext().getApplicationContext(), userDatabase.class, "userDatabase")
                 .allowMainThreadQueries().fallbackToDestructiveMigration(true).build();
 
@@ -103,16 +106,50 @@ public class GameScreen extends Fragment {
 
        userGameData usersData = viewModel.getPlayersGameData();
 
-        //getting the id for the scoreText Text view
+        // Get ids for views to immediately be set up
         scoreText = getView().findViewById(R.id.scoreText);
         happyText = getView().findViewById(R.id.happyScore);
+        backgroundView = view.findViewById(R.id.background);
 
-       if(usersData != null){
-           user currentUser = usersData.user;
-           gameData game = usersData.usersGameData.get(0);
-           scoreText.setText(String.valueOf(game.score));
-           happyText.setText(String.valueOf(game.happiness));
+        // If user has logged in
+        if(usersData != null){
+            // Set up everything based on previous data or defaults
+            user currentUser = usersData.user;
+            gameData game = usersData.usersGameData.get(0);
+            scoreText.setText(String.valueOf(game.score));
+            happyText.setText(String.valueOf(game.happiness));
+
+           // Setting difficulty
+           if(game.difficulty == 2)
+           {
+               difficultyMod = 2;
+               happinessRate = 5;
+           }
+           else if(game.difficulty == 3)
+           {
+               difficultyMod = 1;
+               happinessRate = 10;
+           }
+           else if(game.difficulty == 4)
+           {
+               difficultyMod = 1;
+               happinessRate = 99; // TODO make this random
+           }
+           else
+           {
+               difficultyMod = 5;
+               happinessRate = 1;
+           }
+
+           // Setting the background
+           if(game.background == 1)
+               backgroundView.setImageResource(R.drawable.white);
+           else if(game.background == 2)
+               backgroundView.setImageResource(R.drawable.skaia);
+           else
+               backgroundView.setImageResource(R.drawable.hell);
        }
+        // Otherwise, yell at them
        else{
            Toast loginPlease = new Toast(getActivity().getApplicationContext());
            loginPlease.setText("Please go and enter a username.");
@@ -121,8 +158,8 @@ public class GameScreen extends Fragment {
            loginPlease.show();
            return;
        }
-        // ------------TOPHER CODE---------------
 
+       // Get the rest of the views
         egbert = view.findViewById(R.id.egbert);
         gushers = view.findViewById(R.id.gushers);
         gushersSprites = view.findViewById(R.id.gushersSprites);
@@ -136,84 +173,99 @@ public class GameScreen extends Fragment {
         egbert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // update animation
-
-                // PULL FROM DATABASE TO DETERMINE WHICH ANIMATION TO PLAY
-
-                // ------------TOPHER CODE---------------
+                // Get database reference
                 gameData game = usersData.usersGameData.get(0);
 
-                //increasing the score by 1 each time
+                // Update the game score
                 game.score +=1;
                 scoreText.setText(String.valueOf(game.score));
                 userDB.gameDataDAO().updateGameData(game);
 
-
-                if(game.score % 5 == 0){
-                    game.happiness-=1;
+                // Update happiness
+                if(game.score % difficultyMod == 0){
+                    game.happiness-=happinessRate;
                     happyText.setText(String.valueOf(game.happiness));
                     userDB.gameDataDAO().updateGameData(game);
                 }
-                // ------------TOPHER CODE---------------
 
-                egbertAnim.stop();
+                // Depending on happiness, display a specific animation
+                if(game.happiness > 0)
+                {
+                    egbertAnim.stop();
 
-                // figure it out
-                if(game.happiness < 75 && game.happiness > 50)
-                {
-                    egbert.setImageResource(R.drawable.johnlv1anim);
-                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                    egbertAnim.start();
-                }
-                else if(game.happiness < 50 && game.happiness > 25)
-                {
-                    egbert.setImageResource(R.drawable.johnlv2anim);
-                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                    egbertAnim.start();
-                }
-                else if(game.happiness < 25 && game.happiness > 0)
-                {
-                    egbert.setImageResource(R.drawable.johnlv3anim);
-                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                    egbertAnim.start();
-                }
-
-                // Returns to idle animation
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        egbert.setImageResource(R.drawable.idleanim);
+                    // figure it out
+                    if(game.happiness < 75 && game.happiness > 50)
+                    {
+                        egbert.setImageResource(R.drawable.johnlv1anim);
                         egbertAnim = (AnimationDrawable) egbert.getDrawable();
                         egbertAnim.start();
                     }
-                }, annoyedDuration);
+                    else if(game.happiness < 50 && game.happiness > 25)
+                    {
+                        egbert.setImageResource(R.drawable.johnlv2anim);
+                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                        egbertAnim.start();
+                    }
+                    else if(game.happiness < 25 && game.happiness > 0)
+                    {
+                        egbert.setImageResource(R.drawable.johnlv3anim);
+                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                        egbertAnim.start();
+                    }
+
+                    // Returns to idle animation
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            egbert.setImageResource(R.drawable.idleanim);
+                            egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                            egbertAnim.start();
+                        }
+                    }, annoyedDuration);
+                }
+                else
+                {
+                    egbert.setImageResource(R.drawable.john40);
+                    gushersSprites.setImageResource(R.drawable.brainbleedanim);
+                    gushersAnim = (AnimationDrawable) gushersSprites.getDrawable();
+                    gushersAnim.start();
+                }
+
             }
-            // update database points or whatever
         });
 
         // Click listener for the gushers
-        // TODO make it rain gushers
         gushers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                egbertAnim.stop();
-                egbert.setImageResource(R.drawable.johnhappyjumpanim);
-                gushersSprites.setImageResource(R.drawable.gushersanim);
-                egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                gushersAnim = (AnimationDrawable) gushersSprites.getDrawable();
-                egbertAnim.start();
-                gushersAnim.start();
-                // Returns to idle animation
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        egbert.setImageResource(R.drawable.idleanim);
-                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                        egbertAnim.start();
-                        gushersAnim.stop();
-                        gushersSprites.setImageResource(R.drawable.gushersblank);
-                    }
-                }, happyJumpDuration);
+                gameData game = usersData.usersGameData.get(0);
+
+                if(game.happiness > 0)
+                {
+                    game.happiness += 1;
+                    happyText.setText(String.valueOf(game.happiness));
+                    userDB.gameDataDAO().updateGameData(game);
+
+                    egbertAnim.stop();
+                    egbert.setImageResource(R.drawable.johnhappyjumpanim);
+                    gushersSprites.setImageResource(R.drawable.gushersanim);
+                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                    gushersAnim = (AnimationDrawable) gushersSprites.getDrawable();
+                    egbertAnim.start();
+                    gushersAnim.start();
+                    // Returns to idle animation
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            egbert.setImageResource(R.drawable.idleanim);
+                            egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                            egbertAnim.start();
+                            gushersAnim.stop();
+                            gushersSprites.setImageResource(R.drawable.gushersblank);
+                        }
+                    }, happyJumpDuration);
+                }
+
             }
         });
 
@@ -221,19 +273,28 @@ public class GameScreen extends Fragment {
         pogohammer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                egbertAnim.stop();
-                egbert.setImageResource(R.drawable.pogohammeranim);
-                egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                egbertAnim.start();
-                // Returns to idle animation
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        egbert.setImageResource(R.drawable.idleanim);
-                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                        egbertAnim.start();
-                    }
-                }, pogoDuration);
+                gameData game = usersData.usersGameData.get(0);
+
+                if(game.happiness > 0)
+                {
+                    game.happiness += 5;
+                    happyText.setText(String.valueOf(game.happiness));
+                    userDB.gameDataDAO().updateGameData(game);
+
+                    egbertAnim.stop();
+                    egbert.setImageResource(R.drawable.pogohammeranim);
+                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                    egbertAnim.start();
+                    // Returns to idle animation
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            egbert.setImageResource(R.drawable.idleanim);
+                            egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                            egbertAnim.start();
+                        }
+                    }, pogoDuration);
+                }
             }
         });
 
@@ -241,21 +302,29 @@ public class GameScreen extends Fragment {
         bunny.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                egbertAnim.stop();
-                egbert.setImageResource(R.drawable.bunnyanim);
-                egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                egbertAnim.start();
-                // Returns to idle animation
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        egbert.setImageResource(R.drawable.idleanim);
-                        egbertAnim = (AnimationDrawable) egbert.getDrawable();
-                        egbertAnim.start();
-                    }
-                }, bunnyDuration);
+                gameData game = usersData.usersGameData.get(0);
+
+                if(game.happiness > 0)
+                {
+                    game.happiness += 10;
+                    happyText.setText(String.valueOf(game.happiness));
+                    userDB.gameDataDAO().updateGameData(game);
+
+                    egbertAnim.stop();
+                    egbert.setImageResource(R.drawable.bunnyanim);
+                    egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                    egbertAnim.start();
+                    // Returns to idle animation
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            egbert.setImageResource(R.drawable.idleanim);
+                            egbertAnim = (AnimationDrawable) egbert.getDrawable();
+                            egbertAnim.start();
+                        }
+                    }, bunnyDuration);
+                }
             }
         });
     }
-
 }

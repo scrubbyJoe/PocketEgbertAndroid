@@ -115,7 +115,7 @@ public class TitleScreen extends Fragment {
 
                     user insertedUser= userDB.userDAO().getUsername(inputtedUser);
 
-                    gameData newGame = new gameData(0,100,insertedUser.id);
+                    gameData newGame = new gameData(0,100,insertedUser.id, 1, 1);
                     //adding the new user and data to the database
                     userDB.gameDataDAO().addGameData(newGame);
 
