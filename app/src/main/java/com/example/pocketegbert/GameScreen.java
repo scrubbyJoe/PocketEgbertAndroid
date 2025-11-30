@@ -111,6 +111,14 @@ public class GameScreen extends Fragment {
         happyText = getView().findViewById(R.id.happyScore);
         backgroundView = view.findViewById(R.id.background);
 
+        // Get the rest of the views
+        egbert = view.findViewById(R.id.egbert);
+        gushers = view.findViewById(R.id.gushers);
+        gushersSprites = view.findViewById(R.id.gushersSprites);
+        pogohammer = view.findViewById(R.id.pogohammer);
+        bunny = view.findViewById(R.id.bunny);
+
+
         // If user has logged in
         if(usersData != null){
             // Set up everything based on previous data or defaults
@@ -148,6 +156,19 @@ public class GameScreen extends Fragment {
                backgroundView.setImageResource(R.drawable.skaia);
            else
                backgroundView.setImageResource(R.drawable.hell);
+
+           if(game.happiness > 0)
+           {
+               egbertAnim = (AnimationDrawable) egbert.getDrawable();
+               egbertAnim.start();
+           }
+           else
+           {
+               egbert.setImageResource(R.drawable.john40);
+               gushersSprites.setImageResource(R.drawable.brainbleedanim);
+               gushersAnim = (AnimationDrawable) gushersSprites.getDrawable();
+               gushersAnim.start();
+           }
        }
         // Otherwise, yell at them
        else{
@@ -159,15 +180,6 @@ public class GameScreen extends Fragment {
            return;
        }
 
-       // Get the rest of the views
-        egbert = view.findViewById(R.id.egbert);
-        gushers = view.findViewById(R.id.gushers);
-        gushersSprites = view.findViewById(R.id.gushersSprites);
-        pogohammer = view.findViewById(R.id.pogohammer);
-        bunny = view.findViewById(R.id.bunny);
-
-        egbertAnim = (AnimationDrawable) egbert.getDrawable();
-        egbertAnim.start();
 
         // Click listener for Egbert
         egbert.setOnClickListener(new View.OnClickListener() {
