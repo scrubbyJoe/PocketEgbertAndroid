@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.room.Room;
 
 import android.view.Gravity;
@@ -79,21 +80,27 @@ public class SettingsScreen extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        //setting up the database
         userDatabase userDB = Room.databaseBuilder(requireContext().getApplicationContext(), userDatabase.class, "userDatabase")
                 .allowMainThreadQueries().fallbackToDestructiveMigration(true).build();
 
+        //setting up the view model
         SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
+        //getting the userdata and save
         userGameData usersData = viewModel.getPlayersGameData();
-
         int currentSave = viewModel.getSaveSlot();
 
+        //if the user is logged in and has info
         if(usersData != null){
             user currentUser = usersData.user;
             gameData game = usersData.usersGameData.get(currentSave);
         }
+
+        //if user isn't logged in send them to title screen and yell at them
         else{
+            NavHostFragment.findNavController(requireParentFragment())
+                    .navigate(R.id.action_settingsScreen_to_titleScreen);
             Toast loginPlease = new Toast(getActivity().getApplicationContext());
             loginPlease.setText("Please go and enter a username.");
             loginPlease.setGravity(Gravity.CENTER,0,0);
@@ -106,6 +113,7 @@ public class SettingsScreen extends Fragment {
         diffSpinner = view.findViewById(R.id.difficultySpinner);
         deleteData = view.findViewById(R.id.deleteButton);
 
+        //change the background
         bgSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -125,6 +133,7 @@ public class SettingsScreen extends Fragment {
             }
         });
 
+        //change the difficulty
         diffSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -146,20 +155,13 @@ public class SettingsScreen extends Fragment {
             }
         });
 
+        //delete users info
         deleteData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user currentUser = usersData.user;
-                gameData gameSlot1 = usersData.usersGameData.get(0);
-                gameData gameSlot2 = usersData.usersGameData.get(1);
-                userDB.gameDataDAO().deleteGameData(gameSlot1);
-                userDB.gameDataDAO().deleteGameData(gameSlot2);
-                userDB.userDAO().deleteUser(currentUser);
-                Toast loginAgainPlease = new Toast(getActivity().getApplicationContext());
-                loginAgainPlease.setText("Deleted All Data. Login again to start a new!");
-                loginAgainPlease.setGravity(Gravity.CENTER,0,0);
-                loginAgainPlease.setDuration(Toast.LENGTH_LONG);
-                loginAgainPlease.show();
+                //dialog that prompts the user whether they want to delete their data
+                CustomDialog cd = new CustomDialog();
+                cd.show(getParentFragmentManager(), "TAG");
             }
         });
     }

@@ -22,9 +22,4 @@ public class SharedViewModel extends ViewModel{
     public int getSaveSlot(){
         return currentSave;
     }
-
-    public boolean isThereAPlayer(){
-        return currentPlayer != null;
-    }
-
 }

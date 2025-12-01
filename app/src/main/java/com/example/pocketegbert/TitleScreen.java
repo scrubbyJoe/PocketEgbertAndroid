@@ -19,11 +19,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TitleScreen#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class TitleScreen extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -55,8 +51,6 @@ public class TitleScreen extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
     }
 
     @Override
@@ -65,23 +59,35 @@ public class TitleScreen extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_title_screen, container, false);
 
-        //Setting up database
-        userDatabase userDB = Room.databaseBuilder(requireContext().getApplicationContext(), userDatabase.class, "userDatabase")
-                .allowMainThreadQueries().fallbackToDestructiveMigration(true).build();
-
+        //Variables
         TextInputEditText usernameInput = v.findViewById(R.id.usernameInput);
         Button loginButton = v.findViewById(R.id.loginButton);
         Spinner saveSlotSelector = v.findViewById(R.id.saveSlotSpinner);
 
+        //Setting up database
+        userDatabase userDB = Room.databaseBuilder(requireContext().getApplicationContext(), userDatabase.class, "userDatabase")
+                .allowMainThreadQueries().fallbackToDestructiveMigration(true).build();
 
+
+        //When the login button is pressed
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //making a view model to share the users data with all the fragments
                 SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+                //the name the user inputted
                 String inputtedUser = usernameInput.getText().toString();
+
+                //making a new userGameData to get all the game data of a user
+                userGameData usersData = userDB.userGameDataDAO().getGameData(inputtedUser);
+
+                //The save slot (the timeline) the user has selected
                 int saveSlot = saveSlotSelector.getSelectedItemPosition();
 
+                //if the user presses the button without inputting a name
                 if(inputtedUser.isEmpty()){
+                    //display a toast saying no user name is inputted
                     Toast noUsernameInputed = new Toast(getActivity().getApplicationContext());
                     noUsernameInputed.setText("No username was inputted.");
                     noUsernameInputed.setGravity(Gravity.CENTER,0,0);
@@ -90,21 +96,27 @@ public class TitleScreen extends Fragment {
                     return;
                 }
 
-                userGameData usersData = userDB.userGameDataDAO().getGameData(inputtedUser);
-
-
-                //if the inputted username exists retrieve the game data
+                //if the inputted username already exists in the database retrieve the game data
                 if(usersData != null){
+                    //another check to make sure the user can get data
                     if (usersData.usersGameData != null && !usersData.usersGameData.isEmpty()) {
+                        //give the user the data for their chosen save slot
                         gameData game = usersData.usersGameData.get(saveSlot);
                         Log.i("GameData", "Save Slot: " + saveSlot);
                         Log.i("GameData", "Score: " + usersData.user.getUsername());
                         Log.i("GameData", "Score: " + game.score);
                         Log.i("GameData", "Happiness: " + game.happiness);
+                        //Share the users data with the other fragments
                         viewModel.setPlayersGameData(usersData);
                         viewModel.setSaveSlot(saveSlot);
+                        Toast userLoggedIn = new Toast(getActivity().getApplicationContext());
+                        userLoggedIn.setText("Welcome back " + usersData.user.getUsername() + "!");
+                        userLoggedIn.setGravity(Gravity.CENTER,0,0);
+                        userLoggedIn.setDuration(Toast.LENGTH_LONG);
+                        userLoggedIn.show();
                         }
                     else {
+                        //If there is an error getting the user data display this error
                         Log.i("ERROR", "nothing found");
                     }
                 }
@@ -120,15 +132,25 @@ public class TitleScreen extends Fragment {
 
                     user insertedUser= userDB.userDAO().getUsername(inputtedUser);
 
+                    //making two game slots for both save slots
                     gameData newGameSlot1 = new gameData(0,100,insertedUser.id,1,1);
                     gameData newGameSlot2 = new gameData(0,100,insertedUser.id,1,1);
+
                     //adding the new user and data to the database
                     userDB.gameDataDAO().addGameData(newGameSlot1);
                     userDB.gameDataDAO().addGameData(newGameSlot2);
 
                     usersData= userDB.userGameDataDAO().getGameData(inputtedUser);
 
+                    //set the players game data in the view model
                     viewModel.setPlayersGameData(usersData);
+
+                    //Display a toast to confirm that the new user has been made
+                    Toast newUserWasMade = new Toast(getActivity().getApplicationContext());
+                    newUserWasMade.setText("New user has been made!");
+                    newUserWasMade.setGravity(Gravity.CENTER,0,0);
+                    newUserWasMade.setDuration(Toast.LENGTH_LONG);
+                    newUserWasMade.show();
 
                     Log.i("New User", "User was added");
                     

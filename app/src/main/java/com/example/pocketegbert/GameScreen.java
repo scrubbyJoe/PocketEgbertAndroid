@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.room.Room;
 
 import android.os.Handler;
@@ -21,18 +22,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link GameScreen#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class GameScreen extends Fragment {
-
-    // ------------TOPHER CODE---------------
-
     TextView scoreText;
     TextView happyText;
-    // ------------TOPHER CODE---------------
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -103,10 +102,12 @@ public class GameScreen extends Fragment {
         userDatabase userDB = Room.databaseBuilder(requireContext().getApplicationContext(), userDatabase.class, "userDatabase")
                 .allowMainThreadQueries().fallbackToDestructiveMigration(true).build();
 
-       SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        //Setting up the share model to connect the data between the fragments
+        SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-       userGameData usersData = viewModel.getPlayersGameData();
-       int currentSave = viewModel.getSaveSlot();
+        //getting the users data and the current save
+        userGameData usersData = viewModel.getPlayersGameData();
+        int currentSave = viewModel.getSaveSlot();
 
         // Get ids for views to immediately be set up
         scoreText = getView().findViewById(R.id.scoreText);
@@ -174,6 +175,8 @@ public class GameScreen extends Fragment {
        }
         // Otherwise, yell at them
        else{
+           NavHostFragment.findNavController(requireParentFragment())
+                   .navigate(R.id.action_gameScreen_to_titleScreen);
            Toast loginPlease = new Toast(getActivity().getApplicationContext());
            loginPlease.setText("Please go and enter a username.");
            loginPlease.setGravity(Gravity.CENTER,0,0);
